@@ -119,17 +119,4 @@ public class NotificationService {
         }
     }
 
-    public void sendCustomNotification(String to, String subject, String message) {
-        try {
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setTo(to);
-            mailMessage.setSubject(subject);
-            mailMessage.setText(message);
-
-            mailSender.send(mailMessage);
-            log.info("Custom notification sent to: {}", to);
-        } catch (Exception e) {
-            log.error("Failed to send custom notification to: {}", to, e);
-        }
-    }
 }
