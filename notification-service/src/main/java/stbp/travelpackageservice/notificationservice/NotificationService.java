@@ -21,22 +21,27 @@ public class NotificationService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(getUserEmail(event.getUserId())); // TODO: fetch from user service?
             message.setSubject("Booking Created - Smart Travel Booking Platform");
-            message.setText(String.format(
-                "Dear Customer,\n\n" +
-                "Your booking has been created successfully!\n\n" +
-                "Booking Details:\n" +
-                "Package ID: %s\n" +
-                "Quantity: %d\n" +
-                "Total Price: $%.2f\n" +
-                "Booking Time: %s\n\n" +
-                "Thank you for choosing our travel platform!\n\n" +
-                "Best regards,\n" +
-                "Smart Travel Booking Team",
-                event.getPackageId(),
-                event.getQuantity(),
-                event.getTotalPrice(),
-                event.getTimestamp()
-            ));
+            message.setText("""
+                Dear Customer,
+                
+                Your booking has been created successfully!
+                
+                Booking Details:
+                Package ID: %s
+                Quantity: %d
+                Total Price: $%.2f
+                Booking Time: %s
+                
+                Thank you for choosing our travel platform!
+                
+                Best regards,
+                Smart Travel Booking Team
+                """.formatted(
+                    event.getPackageId(),
+                    event.getQuantity(),
+                    event.getTotalPrice(),
+                    event.getTimestamp()
+                ));
 
             mailSender.send(message);
             log.info("Booking created notification sent to user: {}", event.getUserId());
@@ -50,22 +55,27 @@ public class NotificationService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(getUserEmail(event.getUserId()));
             message.setSubject("Booking Confirmed - Smart Travel Booking Platform");
-            message.setText(String.format(
-                "Dear Customer,\n\n" +
-                "Great news! Your booking has been confirmed!\n\n" +
-                "Booking Details:\n" +
-                "Package ID: %s\n" +
-                "Quantity: %d\n" +
-                "Total Price: $%.2f\n" +
-                "Confirmed Time: %s\n\n" +
-                "Please prepare for your amazing journey!\n\n" +
-                "Best regards,\n" +
-                "Smart Travel Booking Team",
-                event.getPackageId(),
-                event.getQuantity(),
-                event.getTotalPrice(),
-                event.getTimestamp()
-            ));
+            message.setText("""
+                Dear Customer,
+                
+                Great news! Your booking has been confirmed!
+                
+                Booking Details:
+                Package ID: %s
+                Quantity: %d
+                Total Price: $%.2f
+                Confirmed Time: %s
+                
+                Please prepare for your amazing journey!
+                
+                Best regards,
+                Smart Travel Booking Team
+                """.formatted(
+                    event.getPackageId(),
+                    event.getQuantity(),
+                    event.getTotalPrice(),
+                    event.getTimestamp()
+                ));
 
             mailSender.send(message);
             log.info("Booking confirmed notification sent to user: {}", event.getUserId());
@@ -79,23 +89,28 @@ public class NotificationService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(getUserEmail(event.getUserId()));
             message.setSubject("Booking Cancelled - Smart Travel Booking Platform");
-            message.setText(String.format(
-                "Dear Customer,\n\n" +
-                "Your booking has been cancelled as requested.\n\n" +
-                "Cancelled Booking Details:\n" +
-                "Package ID: %s\n" +
-                "Quantity: %d\n" +
-                "Total Price: $%.2f\n" +
-                "Cancelled Time: %s\n\n" +
-                "If you have any questions, please contact our support team.\n" +
-                "We hope to serve you again in the future!\n\n" +
-                "Best regards,\n" +
-                "Smart Travel Booking Team",
-                event.getPackageId(),
-                event.getQuantity(),
-                event.getTotalPrice(),
-                event.getTimestamp()
-            ));
+            message.setText("""
+                Dear Customer,
+                
+                Your booking has been cancelled as requested.
+                
+                Cancelled Booking Details:
+                Package ID: %s
+                Quantity: %d
+                Total Price: $%.2f
+                Cancelled Time: %s
+                
+                If you have any questions, please contact our support team.
+                We hope to serve you again in the future!
+                
+                Best regards,
+                Smart Travel Booking Team
+                """.formatted(
+                    event.getPackageId(),
+                    event.getQuantity(),
+                    event.getTotalPrice(),
+                    event.getTimestamp()
+                ));
 
             mailSender.send(message);
             log.info("Booking cancelled notification sent to user: {}", event.getUserId());

@@ -15,6 +15,9 @@ public interface TravelPackageRepository extends ReactiveCrudRepository<TravelPa
     
     Flux<TravelPackage> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
     
-    @Query("SELECT * FROM travel_packages ORDER BY created_at DESC")
+    @Query("""
+        SELECT * FROM travel_packages 
+        ORDER BY created_at DESC
+        """)
     Flux<TravelPackage> findAllOrderByCreatedAtDesc();
 }
