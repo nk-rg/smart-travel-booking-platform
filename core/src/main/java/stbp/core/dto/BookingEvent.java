@@ -1,4 +1,4 @@
-package stbp.travelpackageservice.dto.listener;
+package stbp.core.dto;
 
 import lombok.Data;
 
@@ -11,6 +11,7 @@ public class BookingEvent {
     private String packageId;
     private Integer quantity;
     private BigDecimal totalPrice;
+    private String status;
     private LocalDateTime timestamp;
-    private String status; // CREATED, CONFIRMED, CANCELLED
+    private String message;
 }

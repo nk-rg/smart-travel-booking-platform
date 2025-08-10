@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import stbp.travelpackageservice.dto.listener.BookingEvent;
+import stbp.core.dto.BookingEvent;
 import stbp.travelpackageservice.dto.request.TravelPackageRequest;
 import stbp.travelpackageservice.dto.response.TravelPackageResponse;
 import stbp.travelpackageservice.model.TravelPackage;

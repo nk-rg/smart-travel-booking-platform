@@ -1,22 +1,13 @@
 package stbp.travelpackageservice.userservice.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import stbp.core.dto.UserResponse as CoreUserResponse;
 import stbp.travelpackageservice.userservice.User;
 
-import java.time.LocalDateTime;
-
 @Data
-public class UserResponse {
-    
-    private Long id;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String phoneNumber;
-    private LocalDateTime dateOfBirth;
-    private User.UserRole role;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+@EqualsAndHashCode(callSuper = true)
+public class UserResponse extends CoreUserResponse {
     
     public static UserResponse fromUser(User user) {
         UserResponse response = new UserResponse();
@@ -26,7 +17,7 @@ public class UserResponse {
         response.setLastName(user.getLastName());
         response.setPhoneNumber(user.getPhoneNumber());
         response.setDateOfBirth(user.getDateOfBirth());
-        response.setRole(user.getRole());
+        response.setRole(user.getRole().toString());
         response.setCreatedAt(user.getCreatedAt());
         response.setUpdatedAt(user.getUpdatedAt());
         return response;

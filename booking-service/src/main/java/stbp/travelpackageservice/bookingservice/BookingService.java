@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import stbp.core.dto.BookingEvent;
 import stbp.travelpackageservice.bookingservice.service.AvailabilityValidationService;
 
 import java.math.BigDecimal;

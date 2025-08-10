@@ -1,4 +1,4 @@
-package stbp.travelpackageservice.notificationservice.dto;
+package stbp.core.dto;
 
 import lombok.Data;
 

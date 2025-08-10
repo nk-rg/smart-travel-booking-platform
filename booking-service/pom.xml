@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>stbp</groupId>
 		<artifactId>smart-travel-booking-platform</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
@@ -58,6 +58,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>stbp</groupId>
+			<artifactId>core</artifactId>
 		</dependency>
 	</dependencies>
 
