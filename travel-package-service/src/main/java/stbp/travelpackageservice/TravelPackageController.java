@@ -22,10 +22,8 @@ public class TravelPackageController {
     }
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<TravelPackageResponse>> getPackageById(@PathVariable String id) {
-        return travelPackageService.findById(id)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+    public Mono<TravelPackageResponse> getPackageById(@PathVariable String id) {
+        return travelPackageService.findById(id);
     }
 
     @PostMapping
@@ -34,12 +32,10 @@ public class TravelPackageController {
     }
 
     @PutMapping("/{id}")
-    public Mono<ResponseEntity<TravelPackageResponse>> updatePackage(
+    public Mono<TravelPackageResponse> updatePackage(
             @PathVariable String id, 
             @RequestBody TravelPackageRequest request) {
-        return travelPackageService.update(id, request)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+        return travelPackageService.update(id, request);
     }
 
     @DeleteMapping("/{id}")

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import stbp.core.dto.BookingEvent;
+import stbp.core.exception.ResourceNotFoundException;
 import stbp.travelpackageservice.dto.request.TravelPackageRequest;
 import stbp.travelpackageservice.dto.response.TravelPackageResponse;
 import stbp.travelpackageservice.model.TravelPackage;
@@ -32,7 +33,8 @@ public class TravelPackageService {
 
     public Mono<TravelPackageResponse> findById(String id) {
         return repository.findById(id)
-                .map(TravelPackage::toResponse);
+                .map(TravelPackage::toResponse)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Travel package not found with id: " + id)));
     }
 
     public Mono<TravelPackageResponse> save(TravelPackageRequest request) {
@@ -51,6 +53,7 @@ public class TravelPackageService {
 
     public Mono<TravelPackageResponse> update(String id, TravelPackageRequest request) {
         return repository.findById(id)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Travel package not found with id: " + id)))
                 .flatMap(existingPackage -> {
                     existingPackage.setName(request.getName());
                     existingPackage.setDescription(request.getDescription());
