@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import stbp.core.exception.ResourceAlreadyExistsException;
+import stbp.core.exception.ResourceNotFoundException;
+import stbp.core.exception.UnauthorizedAccessException;
 import stbp.travelpackageservice.userservice.config.JwtUtils;
 import stbp.travelpackageservice.userservice.dto.*;
 
@@ -21,7 +24,7 @@ public class UserService {
     
     public JwtResponse registerUser(UserRegistrationRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email is already in use!");
+            throw new ResourceAlreadyExistsException("Email is already in use!");
         }
         
         User user = new User();
@@ -43,14 +46,14 @@ public class UserService {
     
     public JwtResponse authenticateUser(UserLoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + request.getEmail()));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + request.getEmail()));
         
         if (!user.getActive()) {
-            throw new RuntimeException("User account is deactivated");
+            throw new UnauthorizedAccessException("User account is deactivated");
         }
         
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid password");
+            throw new UnauthorizedAccessException("Invalid password");
         }
         
         String jwt = jwtUtils.generateJwtToken(user.getEmail(), user.getId());
@@ -61,13 +64,13 @@ public class UserService {
     
     public UserResponse getUserById(Long id) {
         User user = userRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         return UserResponse.fromUser(user);
     }
     
     public UserResponse getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
         return UserResponse.fromUser(user);
     }
     
@@ -79,10 +82,10 @@ public class UserService {
     
     public UserResponse updateUser(Long id, UserRegistrationRequest request) {
         User user = userRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         
         if (!user.getEmail().equals(request.getEmail()) && userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email is already in use!");
+            throw new ResourceAlreadyExistsException("Email is already in use!");
         }
         
         user.setEmail(request.getEmail());
@@ -103,7 +106,7 @@ public class UserService {
     
     public void deleteUser(Long id) {
         User user = userRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         
         user.setActive(false);
         userRepository.save(user);

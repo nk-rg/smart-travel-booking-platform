@@ -19,42 +19,26 @@ public class UserController {
     
     @PostMapping("/register")
     public ResponseEntity<JwtResponse> registerUser(@Valid @RequestBody UserRegistrationRequest request) {
-        try {
-            JwtResponse response = userService.registerUser(request);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+        JwtResponse response = userService.registerUser(request);
+        return ResponseEntity.ok(response);
     }
     
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody UserLoginRequest request) {
-        try {
-            JwtResponse response = userService.authenticateUser(request);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
+        JwtResponse response = userService.authenticateUser(request);
+        return ResponseEntity.ok(response);
     }
     
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
-        try {
-            UserResponse response = userService.getUserById(id);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        UserResponse response = userService.getUserById(id);
+        return ResponseEntity.ok(response);
     }
     
     @GetMapping("/email/{email}")
     public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String email) {
-        try {
-            UserResponse response = userService.getUserByEmail(email);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        UserResponse response = userService.getUserByEmail(email);
+        return ResponseEntity.ok(response);
     }
     
     @GetMapping
@@ -65,21 +49,13 @@ public class UserController {
     
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UserRegistrationRequest request) {
-        try {
-            UserResponse response = userService.updateUser(id, request);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+        UserResponse response = userService.updateUser(id, request);
+        return ResponseEntity.ok(response);
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        try {
-            userService.deleteUser(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
