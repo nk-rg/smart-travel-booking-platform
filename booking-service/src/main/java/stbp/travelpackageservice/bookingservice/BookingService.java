@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import stbp.core.dto.BookingEvent;
+import stbp.core.exception.BusinessValidationException;
+import stbp.core.exception.ResourceNotFoundException;
 import stbp.travelpackageservice.bookingservice.service.AvailabilityValidationService;
 
 import java.math.BigDecimal;
@@ -28,9 +30,10 @@ public class BookingService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<BookResponse> findById(Long id) {
+    public BookResponse findById(Long id) {
         return bookRepository.findById(id)
-                .map(Book::toResponse);
+                .map(Book::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: " + id));
     }
 
     public List<BookResponse> findByUserId(String userId) {
@@ -45,7 +48,7 @@ public class BookingService {
             boolean hotelAvailable = availabilityValidationService.validateHotelAvailability(request.getHotelId(), request.getQuantity());
             if (!hotelAvailable) {
                 log.warn("Hotel booking rejected - insufficient rooms. HotelId: {}, Requested: {}", request.getHotelId(), request.getQuantity());
-                throw new RuntimeException("Hotel rooms not available for booking");
+                throw new BusinessValidationException("Hotel rooms not available for booking");
             }
         }
         
@@ -53,7 +56,7 @@ public class BookingService {
             boolean flightAvailable = availabilityValidationService.validateFlightAvailability(request.getFlightId(), request.getQuantity());
             if (!flightAvailable) {
                 log.warn("Flight booking rejected - insufficient seats. FlightId: {}, Requested: {}", request.getFlightId(), request.getQuantity());
-                throw new RuntimeException("Flight seats not available for booking");
+                throw new BusinessValidationException("Flight seats not available for booking");
             }
         }
 
@@ -86,41 +89,41 @@ public class BookingService {
     }
 
 
-    public Optional<BookResponse> confirmBooking(Long id) {
-        return bookRepository.findById(id)
-                .map(book -> {
-                    // TODO: implement confirmation logic/validations?
-                    
-                    BookingEvent event = new BookingEvent();
-                    event.setUserId(book.getUserId());
-                    event.setPackageId(book.getPackageId());
-                    event.setQuantity(book.getQuantity());
-                    event.setTotalPrice(book.getTotalPrice());
-                    event.setTimestamp(LocalDateTime.now());
-                    event.setStatus("CONFIRMED");
+    public BookResponse confirmBooking(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: " + id));
+        
+        // TODO: implement confirmation logic/validations?
+        
+        BookingEvent event = new BookingEvent();
+        event.setUserId(book.getUserId());
+        event.setPackageId(book.getPackageId());
+        event.setQuantity(book.getQuantity());
+        event.setTotalPrice(book.getTotalPrice());
+        event.setTimestamp(LocalDateTime.now());
+        event.setStatus("CONFIRMED");
 
-                    kafkaTemplate.send("booking-events", event);
-                    log.info("Booking confirmed: {}", book.getId());
+        kafkaTemplate.send("booking-events", event);
+        log.info("Booking confirmed: {}", book.getId());
 
-                    return book.toResponse();
-                });
+        return book.toResponse();
     }
 
-    public Optional<BookResponse> cancelBooking(Long id) {
-        return bookRepository.findById(id)
-                .map(book -> {
-                    BookingEvent event = new BookingEvent();
-                    event.setUserId(book.getUserId());
-                    event.setPackageId(book.getPackageId());
-                    event.setQuantity(book.getQuantity());
-                    event.setTotalPrice(book.getTotalPrice());
-                    event.setTimestamp(LocalDateTime.now());
-                    event.setStatus("CANCELLED");
+    public BookResponse cancelBooking(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: " + id));
+        
+        BookingEvent event = new BookingEvent();
+        event.setUserId(book.getUserId());
+        event.setPackageId(book.getPackageId());
+        event.setQuantity(book.getQuantity());
+        event.setTotalPrice(book.getTotalPrice());
+        event.setTimestamp(LocalDateTime.now());
+        event.setStatus("CANCELLED");
 
-                    kafkaTemplate.send("booking-events", event);
-                    log.info("Booking cancelled: {}", book.getId());
+        kafkaTemplate.send("booking-events", event);
+        log.info("Booking cancelled: {}", book.getId());
 
-                    return book.toResponse();
-                });
+        return book.toResponse();
     }
 }

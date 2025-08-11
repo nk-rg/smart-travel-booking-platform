@@ -21,9 +21,8 @@ public class BookingController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BookResponse> getBookingById(@PathVariable Long id) {
-        return bookingService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        BookResponse response = bookingService.findById(id);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/user/{userId}")
@@ -39,15 +38,13 @@ public class BookingController {
 
     @PostMapping("/{id}/confirm")
     public ResponseEntity<BookResponse> confirmBooking(@PathVariable Long id) {
-        return bookingService.confirmBooking(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        BookResponse response = bookingService.confirmBooking(id);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{id}/cancel")
     public ResponseEntity<BookResponse> cancelBooking(@PathVariable Long id) {
-        return bookingService.cancelBooking(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        BookResponse response = bookingService.cancelBooking(id);
+        return ResponseEntity.ok(response);
     }
 }
